@@ -158,7 +158,7 @@ export const FitnessHeroStage: React.FC<FitnessHeroStageProps> = ({
                     theme.isDark ? 'text-white' : 'text-slate-900'
                   }`}
                 >
-                  Champion Dashboard · 智能力量控制台
+                  力量控制台 · 智能力量训练面板
                 </span>
               </div>
               <p className={`text-xs mt-0.5 ${theme.isDark ? 'text-zinc-400' : 'text-slate-500'}`}>
@@ -280,7 +280,7 @@ export const FitnessHeroStage: React.FC<FitnessHeroStageProps> = ({
           >
             <div className="flex items-center justify-between text-xs mb-3">
               <span className={theme.isDark ? 'text-zinc-300 font-semibold' : 'text-slate-700 font-semibold'}>
-                周期容量分布 (Weekly Load Spectrum)
+                周期负荷频谱 · 一周训练容量分布
               </span>
               <div className="flex items-center gap-3 text-[11px] text-zinc-500 font-mono">
                 <span className="flex items-center gap-1">

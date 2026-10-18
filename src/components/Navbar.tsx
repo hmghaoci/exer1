@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     theme.isDark ? 'text-white' : 'text-slate-900'
                   }`}
                 >
-                  GymLog
+                  健身记录
                 </span>
                 <span
                   className="text-[10px] font-semibold tracking-wide whitespace-nowrap"
