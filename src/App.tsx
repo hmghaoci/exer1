@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RawExercise, UserSettings, WeekSchedule, WorkoutSession, WorkoutTemplate, WorkoutExercise } from './types/gym';
 import {
   loadSessions,
@@ -15,8 +15,11 @@ import {
   EXERCISE_MAP,
   getLastPerformance,
 } from './utils/storage';
+import { THEMES, ThemeStyle } from './types/theme';
+import { getSavedTheme, saveTheme } from './utils/theme';
 import { Navbar, NavTab } from './components/Navbar';
 import { RestTimerBar } from './components/RestTimerBar';
+import { ThemeSelector } from './components/ThemeSelector';
 import { ExerciseDetailModal } from './components/ExerciseDetailModal';
 import { ExerciseSelectorModal } from './components/ExerciseSelectorModal';
 import { PlateCalculatorModal } from './components/PlateCalculatorModal';
@@ -34,11 +37,20 @@ import { detectWorkoutPRs } from './utils/calculations';
 import { playCountdownTick, playRestCompleteSound } from './utils/audio';
 
 export default function App() {
+  // Theme State
+  const [themeStyle, setThemeStyle] = useState<ThemeStyle>(getSavedTheme);
+  const theme = THEMES[themeStyle] || THEMES.eclipse;
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+
+  const handleSelectTheme = (newTheme: ThemeStyle) => {
+    setThemeStyle(newTheme);
+    saveTheme(newTheme);
+  };
+
   // Core Data States
   const [sessions, setSessions] = useState<WorkoutSession[]>(() => {
     const loaded = loadSessions();
     if (loaded.length === 0) {
-      // Seed rich realistic 8-week history so user immediately gets a gorgeous dashboard experience!
       return seedRealisticHistory();
     }
     return loaded;
@@ -266,7 +278,6 @@ export default function App() {
   const handleFinishWorkout = () => {
     if (!activeWorkout) return;
 
-    // Filter exercises that have at least one set
     let totalVol = 0;
     let completedSets = 0;
 
@@ -317,6 +328,7 @@ export default function App() {
       templates,
       schedule,
       settings,
+      themeStyle,
     };
 
     const blob = new Blob([JSON.stringify(backup, null, 2)], {
@@ -346,6 +358,9 @@ export default function App() {
       }
       if (data.settings && typeof data.settings === 'object') {
         setSettings({ ...settings, ...data.settings });
+      }
+      if (data.themeStyle && THEMES[data.themeStyle as ThemeStyle]) {
+        handleSelectTheme(data.themeStyle as ThemeStyle);
       }
       return true;
     } catch {
@@ -387,7 +402,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+    <div
+      className="min-h-screen flex flex-col font-sans transition-colors duration-500"
+      style={{
+        backgroundColor: theme.bgCanvas,
+        color: theme.isDark ? '#f8fafc' : '#0f172a',
+      }}
+    >
       {/* Strict 3-zone Header Navigation & Mobile Tab Bar */}
       <Navbar
         currentTab={currentTab}
@@ -399,6 +420,8 @@ export default function App() {
           setPlateCalcWeight(100);
           setIsPlateCalcOpen(true);
         }}
+        onOpenThemeModal={() => setIsThemeModalOpen(true)}
+        theme={theme}
       />
 
       {/* Main Viewport Container */}
@@ -430,6 +453,10 @@ export default function App() {
               onOpenSessionDetail={(session) => {
                 setCurrentTab('history');
               }}
+              theme={theme}
+              onOpenThemeModal={() => setIsThemeModalOpen(true)}
+              onOpen1RMCalc={() => setIs1RMCalcOpen(true)}
+              onOpenPlateCalc={() => setIsPlateCalcOpen(true)}
             />
           )
         )}
@@ -511,6 +538,14 @@ export default function App() {
         onAddSeconds={handleAddRestSeconds}
         onSkip={handleSkipRest}
         onClose={() => setIsRestActive(false)}
+      />
+
+      {/* Theme Selector Modal */}
+      <ThemeSelector
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+        currentTheme={themeStyle}
+        onSelectTheme={handleSelectTheme}
       />
 
       {/* Modals & Dialogs */}
