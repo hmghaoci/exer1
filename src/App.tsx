@@ -438,6 +438,7 @@ export default function App() {
               onOpenExerciseSelector={() => setIsExerciseSelectorOpen(true)}
               onPreviewExercise={(ex) => setPreviewExercise(ex)}
               onTriggerRestTimer={handleTriggerRestTimer}
+              theme={theme}
             />
           ) : (
             <TodayWorkoutView
@@ -482,6 +483,7 @@ export default function App() {
             }}
             onStartTemplateWorkout={handleStartTemplateWorkout}
             onOpenExerciseSelector={() => setIsExerciseSelectorOpen(true)}
+            theme={theme}
           />
         )}
 
@@ -489,6 +491,7 @@ export default function App() {
           <ExerciseLibraryView
             onSelectExerciseToPreview={(ex) => setPreviewExercise(ex)}
             historySessions={sessions}
+            theme={theme}
           />
         )}
 
@@ -500,6 +503,7 @@ export default function App() {
             }}
             onStartEmptyWorkout={handleStartEmptyWorkout}
             onSeedSampleData={handleSeedSampleData}
+            theme={theme}
           />
         )}
 
@@ -515,6 +519,7 @@ export default function App() {
               if (w) setPlateCalcWeight(w);
               setIsPlateCalcOpen(true);
             }}
+            theme={theme}
           />
         )}
 
@@ -526,6 +531,9 @@ export default function App() {
             onImportData={handleImportData}
             onSeedSampleData={handleSeedSampleData}
             onClearAllData={handleClearAllData}
+            theme={theme}
+            currentTheme={themeStyle}
+            onSelectTheme={handleSelectTheme}
           />
         )}
       </main>
@@ -538,6 +546,7 @@ export default function App() {
         onAddSeconds={handleAddRestSeconds}
         onSkip={handleSkipRest}
         onClose={() => setIsRestActive(false)}
+        theme={theme}
       />
 
       {/* Theme Selector Modal */}
