@@ -39,8 +39,14 @@ import { playCountdownTick, playRestCompleteSound } from './utils/audio';
 export default function App() {
   // Theme State
   const [themeStyle, setThemeStyle] = useState<ThemeStyle>(getSavedTheme);
-  const theme = THEMES[themeStyle] || THEMES.eclipse;
+  const theme = THEMES[themeStyle] || THEMES.clean;
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.style.backgroundColor = theme.bgCanvas;
+    document.documentElement.style.colorScheme = theme.isDark ? 'dark' : 'light';
+    document.body.style.backgroundColor = theme.bgCanvas;
+  }, [theme]);
 
   const handleSelectTheme = (newTheme: ThemeStyle) => {
     setThemeStyle(newTheme);
@@ -549,12 +555,30 @@ export default function App() {
         theme={theme}
       />
 
+      {/* Root Ambient Theme Horizon Glow & Subtle Gradient (stays with theme across all tabs) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10 flex justify-center items-start">
+        <div
+          className="w-[850px] sm:w-[1100px] h-[450px] rounded-full blur-[120px] transition-all duration-700 -translate-y-28 opacity-35"
+          style={{
+            background: `radial-gradient(circle, ${theme.accentColor} 0%, transparent 70%)`,
+          }}
+        />
+        <div
+          className="absolute top-[260px] w-[95%] max-w-5xl h-[100px] rounded-[100%] border-t transition-all duration-700 opacity-60"
+          style={{
+            borderColor: `${theme.accentColor}${theme.isDark ? '40' : '25'}`,
+            boxShadow: `0 -10px 50px ${theme.accentColor}${theme.isDark ? '30' : '15'}`,
+          }}
+        />
+      </div>
+
       {/* Theme Selector Modal */}
       <ThemeSelector
         isOpen={isThemeModalOpen}
         onClose={() => setIsThemeModalOpen(false)}
         currentTheme={themeStyle}
         onSelectTheme={handleSelectTheme}
+        theme={theme}
       />
 
       {/* Modals & Dialogs */}
@@ -571,6 +595,7 @@ export default function App() {
               : undefined
           }
           historySessions={sessions}
+          theme={theme}
         />
       )}
 
@@ -587,6 +612,7 @@ export default function App() {
           }}
           onPreviewExercise={(ex) => setPreviewExercise(ex)}
           alreadySelectedIds={activeWorkout ? activeWorkout.exercises.map((e) => e.exerciseId) : []}
+          theme={theme}
         />
       )}
 
@@ -595,6 +621,7 @@ export default function App() {
           isOpen={isPlateCalcOpen}
           onClose={() => setIsPlateCalcOpen(false)}
           initialWeight={plateCalcWeight}
+          theme={theme}
         />
       )}
 
@@ -604,6 +631,7 @@ export default function App() {
           onClose={() => setIs1RMCalcOpen(false)}
           defaultWeight={oneRMWeight}
           defaultReps={oneRMReps}
+          theme={theme}
         />
       )}
 
@@ -613,6 +641,7 @@ export default function App() {
           session={summarySession}
           onClose={() => setIsSummaryOpen(false)}
           onSaveAsTemplate={handleSaveAsTemplateFromSummary}
+          theme={theme}
         />
       )}
     </div>

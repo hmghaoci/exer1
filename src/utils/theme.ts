@@ -1,6 +1,6 @@
 import { THEMES, ThemeConfig, ThemeStyle } from '../types/theme';
 
-const THEME_KEY = 'gymlog.themeStyle';
+const THEME_KEY = 'gymlog.themeStyle_v4';
 
 export function getSavedTheme(): ThemeStyle {
   try {
@@ -9,7 +9,7 @@ export function getSavedTheme(): ThemeStyle {
   } catch {
     // fallback
   }
-  return 'eclipse'; // Default to gorgeous Eclipse Amber matching reference image 1
+  return 'clean'; // 默认主题为极简净白 (Frosted Studio)
 }
 
 export function saveTheme(theme: ThemeStyle) {

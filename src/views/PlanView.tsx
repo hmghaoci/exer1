@@ -113,15 +113,16 @@ export const PlanView: React.FC<PlanViewProps> = ({
                   isToday
                     ? theme.isDark
                       ? 'bg-white/10 border-white/30 text-white shadow-md'
-                      : 'bg-slate-900 text-white border-slate-900 shadow-md'
+                      : 'bg-white text-slate-900 shadow-md ring-2 ring-sky-500/25'
                     : theme.isDark
                     ? 'bg-white/[0.02] border-white/5 hover:border-white/15'
-                    : 'bg-slate-50 border-slate-200/80 hover:border-slate-300'
+                    : 'bg-white border-slate-200/80 hover:border-slate-300'
                 }`}
                 style={
                   isToday
                     ? {
                         borderTop: `3px solid ${theme.accentColor}`,
+                        borderColor: !theme.isDark ? `${theme.accentColor}50` : undefined,
                       }
                     : {}
                 }
@@ -129,9 +130,7 @@ export const PlanView: React.FC<PlanViewProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`text-xs font-bold ${
-                      isToday
-                        ? theme.isDark ? 'text-white' : 'text-white'
-                        : theme.isDark ? 'text-zinc-300' : 'text-slate-700'
+                      theme.isDark ? 'text-zinc-300' : 'text-slate-800'
                     }`}
                   >
                     {DAYS_ZH[dayIdx]}
@@ -140,7 +139,7 @@ export const PlanView: React.FC<PlanViewProps> = ({
                     <span
                       className="text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold"
                       style={{
-                        backgroundColor: `${theme.accentColor}25`,
+                        backgroundColor: `${theme.accentColor}20`,
                         color: theme.accentColor,
                       }}
                     >
@@ -154,21 +153,23 @@ export const PlanView: React.FC<PlanViewProps> = ({
                     <div>
                       <div
                         className={`font-bold text-xs truncate ${
-                          isToday && !theme.isDark ? 'text-white' : theme.isDark ? 'text-white' : 'text-slate-900'
+                          theme.isDark ? 'text-white' : 'text-slate-900'
                         }`}
                       >
-                        {tpl.name}
+                        {tpl.name.replace(/\s*\([a-zA-Z\s]+\)/g, '')}
                       </div>
                       <div
                         className={`text-[11px] mt-0.5 ${
-                          isToday && !theme.isDark ? 'text-slate-300' : 'text-zinc-500'
+                          theme.isDark ? 'text-zinc-400' : 'text-slate-500'
                         }`}
                       >
                         {tpl.exercises.length} 个动作
                       </div>
                     </div>
                   ) : (
-                    <div className="text-xs text-zinc-500 font-medium py-1">休息日 (Rest)</div>
+                    <div className={`text-xs font-medium py-1 ${theme.isDark ? 'text-zinc-500' : 'text-slate-500'}`}>
+                      休息日
+                    </div>
                   )}
                 </div>
 
